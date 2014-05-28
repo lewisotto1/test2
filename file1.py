@@ -12,7 +12,7 @@ s = 'file'+repr(my_in)+'opened'
 print(s)
 my_in_port = "80, 443"
 my_in_name = input('enter server name: ')
-myRoot = "/home/lewis/public/"
+myRoot = "/usr/share/nginx/html"
 myRoot += my_in_name
 my_in_php = input('do you want php? [yes/no]: ')
 if not os.path.exists(myRoot):
