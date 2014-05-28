@@ -12,7 +12,7 @@ s = 'file'+repr(my_in)+'opened'
 print(s)
 my_in_port = "80, 443"
 my_in_name = input('enter server name: ')
-myRoot = "/usr/share/nginx/html"
+myRoot = "/usr/share/nginx/html/"
 myRoot += my_in_name
 my_in_php = input('do you want php? [yes/no]: ')
 if not os.path.exists(myRoot):
@@ -27,7 +27,7 @@ elif my_in_type == 'git':
 else:
     str('Invalid input, exiting')
     exit()
-server_cfg = "server {\nlitsen "+my_in_port+"\nserver_name "+my_in_name+"\n\nlocation / "
+server_cfg = "server {\nlitsen "+my_in_port+"\nserver_name "+my_in_name+" www."+my_in_name+"\n\nlocation / "
 server_cfg += "{\n root "+myRoot+"\n Index   index.php index.html index.htm\n}\n\n"
 if my_in_php == 'yes':
     server_cfg += "location ~ \.php$ {\n include /etc/nginx/fastcgi_params;\n"
