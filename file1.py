@@ -2,16 +2,16 @@
 
 import os
 from subprocess import call
-my_in = "/etc/nginx/conf.d/virtual.conf"
+my_in = "/etc/nginx/sites-available"
+my_in_name = input('enter server name: ')
 try:
-    file1 = open(my_in, 'a')
+    file1 = open(my_in+my_in_name, 'r+')
 except IOError:
     str('cannot open file.')
     exit()
 s = 'file'+repr(my_in)+'opened'
 print(s)
-my_in_port = "80, 443"
-my_in_name = input('enter server name: ')
+my_in_port = "80"
 myRoot = "/usr/share/nginx/html/"
 myRoot += my_in_name
 my_in_php = input('do you want php? [yes/no]: ')
@@ -25,8 +25,7 @@ elif my_in_type == 'git':
     my_in_files = input('git url: ')
     call(["git", "clone", my_in_files, myRoot])
 else:
-    str('Invalid input, exiting')
-    exit()
+    str('Invalid input, continuing...')
 asdf = my_in_files.rsplit('/')[4]
 asdf = asdf[:-4]
 myRoot2 = myRoot + asdf
@@ -39,9 +38,10 @@ if my_in_php == 'yes':
 
 server_cfg += "}\n"
 file1.write(server_cfg)
-str('done and reloading nginx...')
 file1.close()
-#call(["ln", "-s", "/usr/share/", ""])--
+link = input('ln to enabled?[yes/no]: ')
+if link == 'yes':
+    call(["ln", "-s", "/etc/nginx/sites-available/"+my_in_name, "/etc/nginx/sites-enabled"+my_in_name])
 call(["chmod", "755", "-R", myRoot])
 call(["service", "nginx", "reload"])
 str('exiting')
