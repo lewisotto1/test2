@@ -53,6 +53,6 @@ link = input('link to enabled?[yes/no]: ')
 if link == 'yes':
     call(["ln", "-s", "/etc/nginx/sites-available/"+my_in_name, "/etc/nginx/sites-enabled/"+my_in_name])
 call(["chmod", "755", "-R", myRoot])
-#call(["service", "nginx", "reload"])
+call(["service", "nginx", "reload"])
 print(str('exiting'))
 exit()
