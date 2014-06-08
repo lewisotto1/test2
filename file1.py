@@ -6,15 +6,12 @@ __author__ = 'lewis'
 
 import os
 from subprocess import call
-my_in = "/etc/nginx/sites-available/"
 my_in_name = input('enter server name: ')
 try:
-    file1 = open(my_in+my_in_name, 'w+')
+    file1 = open("/etc/nginx/sites-available/"+my_in_name, 'w+')
 except IOError:
     print(str('cannot open file.'))
     exit(1)
-s = 'file'+repr(my_in_name)+'opened'
-print(s)
 my_in_port = "80"
 myRoot = "/usr/share/nginx/html/"
 myRoot += my_in_name
@@ -37,9 +34,10 @@ if not os.path.exists(myRoot):
     os.makedirs(myRoot+"/logs")
 if my_in_ssl == 'ssl':
     my_in_port = "443 ssl"
-server_cfg = "server {\nlisten "+my_in_port+"\nserver_name "+my_in_name+" www."+my_in_name+"\n\nlocation / "
-if my_in_ssl == 'ssl':
+    server_cfg = "server {\nlisten "+my_in_port+"\nserver_name "+my_in_name+" www."+my_in_name+"\n\nlocation / "
     server_cfg += "  ssl_certificate "+my_in_name+".crt;\n  ssl_certificate_key "+my_in_name+".key;"
+else:
+    server_cfg = "server {\nlisten "+my_in_port+"\nserver_name "+my_in_name+" www."+my_in_name+"\n\nlocation / "
 server_cfg += "{\n root "+myRoot+"\n Index   index.php index.html index.htm\n}\n\n"
 if my_in_php == 'yes':
     server_cfg += "location ~ \.php$ {\n include /etc/nginx/fastcgi_params;\n"
