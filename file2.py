@@ -24,10 +24,10 @@ except IOError:
     exit(1)
 myRoot = "/usr/share/nginx/html/"
 myRoot += args.server
-if args.r:
+if args.rsync:
     my_in_ip = input('ip, user and directory to import from: ')
     call(["rsync", "-azv", my_in_ip, myRoot])
-elif args.g:
+elif args.git:
     my_in_files = input('git url: ')
     call(["git", "clone", my_in_files, myRoot])
     call(["chmod", "600", myRoot+".git"])
@@ -36,24 +36,23 @@ else:
 if not os.path.exists(myRoot):
     os.makedirs(myRoot)
     os.makedirs(myRoot+"/logs")
-if args.s:
+if args.ssl:
     my_in_port = "443 ssl"
-    server_cfg = "server {\nlisten {}\nserver_name {} www.{}\n\nlocation /".format(my_in_port, args.server, args.server)
+    server_cfg = "server {{\nlisten {}\nserver_name {} www.{}\n\nlocation /".format(my_in_port, args.server, args.server)
     server_cfg += "  ssl_certificate {}.crt;\n  ssl_certificate_key {}.key;".format(args.server, args.server)
 else:
     my_in_port = "80"
-    server_cfg = "server {\nlisten {}\nserver_name {} www.{}\n\nlocation / ".format(my_in_port, args.server, args.server)
-server_cfg += "{\n root {}\n Index   index.php index.html index.htm\n}\n\n".format(myRoot)
-if args.p:
-    server_cfg += "location ~ \.php$ {\n include /etc/nginx/fastcgi_params;\n"
+    server_cfg = "server {{\nlisten {}\nserver_name {} www.{}\n\nlocation /".format(my_in_port, args.server, args.server)
+server_cfg += "{{\n root {}\n Index   index.php index.html index.htm\n}}\n\n".format(myRoot)
+if args.php:
+    server_cfg += "location ~ \.php$ {{\n include /etc/nginx/fastcgi_params;\n"
     server_cfg += " fastcgi_pass 127.0.0.1:9000;\n fastcgi_index index.php;\n"
     #server_cfg += " fastcgi_pass unix:/tmp/php5-fpm.sock;\n fastcgi_index index.php;\n"
-    server_cfg += " fastcgi_param SCRIPT_FILENAME {}$fast_cgi_scriptname;\n}\n".format(myRoot)
-server_cfg += "location ~ /\. {\n  access_log off;\n  log_not_found off;\n  deny all;\n}\n}"
+    server_cfg += " fastcgi_param SCRIPT_FILENAME {}$fast_cgi_scriptname;\n}}\n".format(myRoot)
+server_cfg += "location ~ /\. {{\n  access_log off;\n  log_not_found off;\n  deny all;\n}}\n}}"
 file1.write(server_cfg)
 file1.close()
-link = input('link to enabled?[yes/no]: ')
-if link == 'yes':
+if args.ls:
     call(["ln", "-s", "/etc/nginx/sites-available/"+args.server, "/etc/nginx/sites-enabled/"+args.server])
 call(["chmod", "755", "-R", myRoot])
 call(["service", "nginx", "reload"])
