@@ -9,6 +9,9 @@ import os
 from subprocess import call
 import argparse
 
+if os.geteuid() != 0:
+    exit("You need to have root privileges to run this script.\nExiting.")
+
 parser = argparse.ArgumentParser(description="Nginx server block creator")
 parser.add_argument('server', help="Server name")
 parser.add_argument('-g', "--git", help="Git url for files")
