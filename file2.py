@@ -27,7 +27,7 @@ try:
 except IOError:
     print(str('cannot open file.'))
     exit(1)
-myRoot = "/usr/share/nginx/html/"
+myRoot = "/srv/www/"
 myRoot += args.server
 myRoot2 = myRoot+"/public_html"
 
@@ -38,8 +38,9 @@ if not os.path.exists(myRoot):
 
 if args.rsync:
     if args.port:
-        call(["rsync", "-e", "'ssh -p"+args.port+"'", args.rsync, myRoot2])
-    call(["rsync", "-azv", args.rsync, myRoot2])
+        call(["rsync", "-e", "'ssh -p "+args.port+"'", args.rsync, myRoot2])
+    else:
+        call(["rsync", "-azv", args.rsync, myRoot2])
 elif args.git:
     call(["git", "clone", args.git, myRoot2])
 else:
@@ -47,7 +48,7 @@ else:
 
 if args.ssl:
     server_cfg = "server {{\nlisten 443 ssl;\nserver_name {0} www.{0};\n\nlocation / {{".format(args.server)
-    server_cfg += "\n  ssl_certificate {0}.crt;\n ssl_certificate_key {0}.key;".format(args.server)
+    server_cfg += "\n ssl_certificate {0}.crt;\n ssl_certificate_key {0}.key;".format(args.server)
 else:
     server_cfg = "server {{\nlisten 80;\nserver_name {0} www.{0}\n\nlocation / {{".format(args.server)
 server_cfg += "\n root {}\n Index   index.php index.html index.htm\n}}\n\n".format(myRoot2)
