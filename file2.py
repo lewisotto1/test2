@@ -60,7 +60,7 @@ server_cfg += "location ~ /\. {\n  access_log off;\n  log_not_found off;\n  deny
 file1.write(server_cfg)
 file1.close()
 
-if args.ls:
+if args.ln:
     call(["ln", "-s", "/etc/nginx/sites-available/"+args.server, "/etc/nginx/sites-enabled/"+args.server])
 call(["chown", "apache:apache", "-R", myRoot2])
 call(["service", "nginx", "reload"])
